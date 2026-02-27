@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator malowania</title>
+</head>
+<body>
+    <h2>Malowanie pokoju: 20zł za m<sup>2</sup></h2>
+
+    <label>Wymiary pokoju (m)</label>
+
+    <div>
+        <input type="number" id="length" placeholder="Długość" step="0.1" min="0">
+        <input type="number" id="width" placeholder="Szerokość" step="0.1" min="0">
+    </div>
+
+    <div class="checkbox">
+        <input type="checkbox" id="paintCeiling">
+        <label for="paintCeiling">Malować sufit?</label>
+    </div>
+
+    <button onclick="calculateCost()">OBLICZ KOSZT</button>
+
+    <div class="result" id="result">
+        <p><strong>Powierzchnia całkowita: </strong><span id="area">0</span></p>
+        <p><strong>Koszt malowania: </strong><span id="cost">0</span>zł</p>
+        <p><strong>Zapotrzebowane na farbę: </strong><span id="paintAmount">0</span>litrów</p>
+    </div>
+    <script>
+        function calculateCost(){
+            let roomLength = document.getElementById('length').value;
+            let roomWidth = document.getElementById('width').value;
+            let paintCeiling = document.getElementById('paintCeiling').checked;
+            // console.log(paintCeiling);
+            
+            // walidacja danych
+            if (isNaN(roomLength) || isNaN(roomWidth) || roomLength <= 0 || roomWidth <= 0) {
+                alert("Podaj poprawne wymiary");
+                return;
+            }
+            
+            const roomHeight = 2.5;
+            const pricePerM2 = 20;
+
+            // obliczenie powierzchni ścian
+            let totalArea = 2 * (roomLength * roomHeight) + 2 * (roomWidth * roomHeight);
+
+        }
+    </script>
+</body>
+</html>
