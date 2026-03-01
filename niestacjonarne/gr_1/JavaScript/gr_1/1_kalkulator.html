@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator malowania</title>
+</head>
+<body>
+  <h2>Malowanie pokoju: 8zł za <sup>2</sup></h2>
+
+  <label for="Wymiary pokoju (m):"></label>
+  <div>
+    <input type="number" id="roomLength" placeholder="Długość" min="0" step="0.1">
+    <input type="number" id="roomWidth" placeholder="Szerokość" min="0" step="0.1">
+  </div>
+
+  <div class="checkbox">
+    <input type="checkbox" id="paintCeiling">
+    <label for="paintCeiling">Malować sufit?</label>
+  </div>
+
+  <button onclick="calculateCost()">OBLICZ KOSZT</button>
+
+  <div class="result" id="result">
+    <p><strong>Powierzchnia całkowita:</strong> <span id="totalArea">0</span></p>
+    <p><strong>Koszt malowania:</strong> <span id="totalCost">0</span> zł</p>
+    <p>Farba: <strong><span id="paintAmount">0</span> litrów</strong></p>
+  </div>
+
+  <script>
+    function calculateCost(){
+      let roomLength = parseFloat(document.getElementById('roomLength').value);
+      let roomWidth = parseFloat(document.getElementById('roomWidth').value);
+      let paintCeiling = document.getElementById('paintCeiling').checked;
+
+      // let sum = roomLength + roomWidth;
+      // console.log(typeof roomLength);
+      // console.log(sum);
+      
+      if (isNaN(roomLength) || isNaN(roomWidth) || roomLength <= 0 || roomWidth <= 0) {
+        alert('Podaj poprawne wymiary');
+        return;
+      }
+
+      const roomHeight = 2.5;
+      const pricePerM2 = 8;
+
+      let totalArea = 2 * roomHeight * (roomLength + roomWidth);
+
+      if (paintCeiling) {
+        totalArea += roomLength * roomWidth;
+      }
+      
+      let totalCost = totalArea * pricePerM2;
+
+      const layers = 1;
+
+      let paintAmount = Math.ceil((totalArea * layers) / 10);
+
+      document.getElementById('totalArea').textContent = totalArea.toFixed(2);
+      document.getElementById('totalCost').textContent = totalCost.toFixed(2);
+      document.getElementById('paintAmount').textContent = paintAmount;
+
+      console.log(paintAmount);
+      
+      
+    }
+  </script>
+</body>
+</html>
