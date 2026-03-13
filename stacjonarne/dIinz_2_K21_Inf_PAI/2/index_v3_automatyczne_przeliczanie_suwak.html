@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Przeliczanie temperatury</title>
+</head>
+<style>
+    body {
+        font-family: Arial;
+        background-color: #f0f4f8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        text-align: center;
+        width: 300px;
+    }
+
+    input {
+        padding: 8px;
+        width: 80%;
+        margin-top: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        background-color: #2b7cff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #1a5fd1;
+    }
+
+    #result {
+        margin-top: 20px;
+        font-weight: bold;
+        color: #333;
+    }
+</style>
+<body>
+    <div class="container">
+        <h2>Fahrenheit -> Celsjusz</h2>
+
+        <form>
+            Podaj temperaturę w °F:<br>
+            <input type="range" id="slider" value="32" min="-40" max="212" oninput="convertTemperature()" ><br>
+        </form>
+
+        <p id="result"></p>
+    </div>
+
+    <script>
+        function convertTemperature(){
+            let fahrenheitValue = document.getElementById("slider").value;
+
+            if (fahrenheitValue === "") {
+                document.getElementById("result").innerHTML = "";
+                return;
+            }
+
+            let celsiusValue = (fahrenheitValue - 32) * 5 / 9;
+
+            document.getElementById("result").innerHTML = "Temperatura w °C: " + celsiusValue.toFixed(2);
+
+            // zmiana koloru tła
+            let percent = (fahrenheitValue + 40) / (212 + 40);
+            let r = Math.round(255 * percent);
+            let b = Math.round(255 * (1 - percent));
+
+            document.body.style.backgroundColor = "rgb(" + r + ", 100, " + b + ")";
+        }
+    </script>
+</body>
+</html>
