@@ -6,12 +6,13 @@
   <title>Kalkulator malowania</title>
 </head>
 <body>
-  <h2>Malowanie pokoju: 8 zł za m<sup>2</sup></h2>
+  <h3>Malowanie pokoju: 10zł za m<sup>2</sup></h3>
 
-  <label>Wmiary pokoju (m):</label>
+  <label for="wymiary pokoju w (m)"></label>
+
   <div>
-    <input type="number" id="roomLength" placeholder="Długość" step="0.1" min="0">
-    <input type="number" id="roomWidth" placeholder="Szerokość" step="0.1" min="0">
+    <input type="number" id="roomLength" placeholder="Długość" min="0" step="0.1">
+    <input type="number" id="roomWidth" placeholder="Szerokość" min="0" step="0.1">
   </div>
 
   <div class="checkbox">
@@ -22,9 +23,9 @@
   <button onclick="calculateCost()">OBLICZ KOSZT</button>
 
   <div class="result" id="result">
-    <p><strong>Powierzchnia całkowita:</strong> <span id="totalArea">0</span> m<sup>2</sup></p>
+    <p><strong>Powierzchnia całkowita:</strong> <span id="totalArea">0</span>m<sup>2</sup></p>
     <p><strong>Koszt malowania:</strong> <span id="totalCost">0</span> zł</p>
-    <p>Farba: <strong><span id="paintAmount">0</span> litrów</strong></p>
+    <p><strong>Farba:</strong> <span id="paintAmount">0</span> litrów</p>
   </div>
 
   <script>
@@ -32,19 +33,15 @@
       let roomLength = parseFloat(document.getElementById('roomLength').value);
       let roomWidth = parseFloat(document.getElementById('roomWidth').value);
       let paintCeiling = document.getElementById('paintCeiling').checked;
-      let sum = roomLength + roomWidth;
-
-      // alert(paintCeiling);
-      // console.log(typeof roomLength);
-      // console.log(sum);
 
       if (isNaN(roomLength) || isNaN(roomWidth) || roomLength <= 0 || roomWidth <= 0) {
         alert('Podaj poprawne wymiary');
         return;
       }
-      
+
       const roomHeight = 2.5;
-      const pricePerM2 = 8;
+
+      const pricePerM2 = 10;
 
       let totalArea = 2 * roomHeight * (roomLength + roomWidth);
 
@@ -52,17 +49,25 @@
         totalArea += roomLength * roomWidth;
       }
 
-      let totalCost = totalArea * pricePerM2;
+      // console.log(typeof roomLength);
+      // console.log(totalArea);
       
+      let totalCost = totalArea * pricePerM2;
+
       const layers = 1;
+
       let paintAmount = Math.ceil((totalArea * layers) / 10);
 
+      // console.log(paintAmount);
+      
       document.getElementById('totalArea').textContent = totalArea.toFixed(2);
       document.getElementById('totalCost').textContent = totalCost.toFixed(2);
       document.getElementById('paintAmount').textContent = paintAmount;
-      
     }
   </script>
-  <!-- dodac pole typu number umozliwiajace wybor ilosci warstw farby -->
+
+  <!-- 
+    dodaj nowe pole formularza, ktore pozwoli uzytkownikowi podac liczbe warstw farby
+  -->
 </body>
 </html>
