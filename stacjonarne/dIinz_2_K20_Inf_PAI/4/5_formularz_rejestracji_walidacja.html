@@ -34,7 +34,7 @@
 				<!-- Hasło -->
 				<div class="form-group">
 					<label for="password">Hasło</label>
-					<input type="password" name="password" id="password" required minlength="8">
+					<input type="password" name="password" id="password" required minlength="8" maxlength="50">
 					<div class="error-message">Hasło musi mieć min. 8 znaków, zawierać duża literę, cyfrę i znak specjalny</div>
 					<div class="password-strength">Siła hasła: <span id="strengthText">Brak</span></div>
 				</div>
@@ -107,12 +107,12 @@
 
 		const successMessage = document.querySelector('#successMessage');
 
-		const strenghtText = document.querySelector('#strengthText');
+		const strengthText = document.querySelector('#strengthText');
 
 		const showError = (input, message) => {
 			const formGroup = input.parentElement;
 			input.classList.add('error');
-			input.classList.remove('successs');
+			input.classList.remove('success');
 			const errorEl = formGroup.querySelector('.error-message');
 			if (errorEl) {
 				errorEl.textContent = message;
@@ -153,7 +153,7 @@
 				return false;
 			}
 
-			if (input.value.length > max) {
+			if (max > 0 && input.value.length > max) {
 				showError(input, `${input.previousElementSibling.textContent} nie może mieć więcej niż ${max} znaki`);
 				return false;
 			}
@@ -177,6 +177,7 @@
 			if (password.length >= 8) strength++;
 
 			if (/[A-Z]/.test(password)) strength++;
+			if (/[0-9]/.test(password)) strength++;
 
 			// sprawdza czy zawiera znak specjalny
 			// /^[^A-Za-z0-9]$/gm
@@ -185,25 +186,26 @@
 
 			if (strength <= 1) {
 				feedback = 'Słabe';
-				strenghtText.className = 'strength-weak';
+				strengthText.className = 'strength-weak';
 			}
 			else if (strength <= 2) {
 				feedback = 'Średnie';
-				strenghtText.className = 'strength-medium';
+				strengthText.className = 'strength-medium';
 			}
 			else {
 				feedback = 'Mocne';
-				strenghtText.className = 'strength-strong';
+				strengthText.className = 'strength-strong';
 			}
 
-			strenghtText.textContent = feedback;
-			return strength >= 3;
+			strengthText.textContent = feedback;
+			return strength >= 2;
 		};
 
-		const passwordInput = document.querySelector('#password');
-			passwordInput.addEventListener('input', () => {
-			checkPasswordStrength(passwordInput.value);
-		});
+        const passwordInput = document.querySelector('#password');
+		passwordInput.addEventListener('input', (e) => {
+            checkPasswordStrength(passwordInput.value)
+        });
+
 
 		form.addEventListener('submit', (e) => {
 			e.preventDefault();
@@ -242,10 +244,47 @@
 				successMessage.style.display = 'block';
 				form.reset();
 
-				strenghtText.textContent = 'Brak';
-				strenghtText.className = '';
+				strengthText.textContent = 'Brak';
+				strengthText.className = '';
 			}
 	});
+
+    inputs.forEach(input => {
+        input.addEventListener('input', () => validateField(input));
+        input.addEventListener('change', () => validateField(input));
+    });
+
+    const validateField = (input) => {
+        let isValid = true;
+
+        if (!checkRequired(input)) isValid = false;
+
+        if (isValid && input.minLength > 0) {
+            if (!checkLength(input, input.minLength, input.maxLength)) {
+                isValid = false;
+            }
+        }
+
+        if (isValid && input.type === 'email') {
+            if (!checkEmail(input)) isValid = false;
+        }
+
+        if (input.id === 'password') {
+            checkPasswordStrength(input.value);
+        }
+
+        if (input.id === 'confirmPassword') {
+            const password = document.querySelector('#password');
+            if (input.value !== password.value) {
+                showError(input, 'Hasłą są różne!');
+                isValid = false;
+            }
+        }
+
+        if (isValid) {
+            showSuccess(input);
+        }
+    };
 	</script>
 </body>
 </html>
