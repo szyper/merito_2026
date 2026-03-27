@@ -101,7 +101,7 @@
 		// pobranie elementów
 		const form = document.querySelector('#registerForm');
 
-		const inputs = document.querySelectorAll('input', 'select');
+		const inputs = document.querySelectorAll('input, select');
 
 		const submitBtn = document.querySelector('#submitBtn');
 
@@ -123,21 +123,29 @@
 		const showSuccess = (input) => {
 			const formGroup = input.parentElement;
 			input.classList.remove('error');
-			input.classList.add('successs');
+			input.classList.add('success');
 			const errorEl = formGroup.querySelector('.error-message');
 			if (errorEl) {
-				errorEl.textContent = message;
+				errorEl.textContent = '';
 				errorEl.classList.remove('show');
 			}
 		};
 
 		const checkRequired = (input) => {
+			if (input.type === 'checkbox') {
+				if (!input.checked) {
+					showError(input, 'Musisz zaakceptować regulamin');
+					return false;
+				}
+				return true;
+			}
+
 			if (input.value.trim() === '') {
-				showError(input, input.name === 'terms' ? 'Musisz zaakceptować regulamin' : input.name === 'email' ? 'Email jest wymagany' : `${input.previousElementSibling.textContent} jest wymagane`);
+				showError(input, `${input.previousElementSibling.textContent} jest wymagane`);
 				return false;
 			}
 			return true;
-		};
+};
 
 		const checkLength = (input, min, max) => {
 			if (input.value.length < min) {
@@ -173,7 +181,7 @@
 			// sprawdza czy zawiera znak specjalny
 			// /^[^A-Za-z0-9]$/gm
 			// /^[\W|_]$/gm
-			if (/^[^A-Za-z0-9]/.test(password)) strength++;
+			if (/[^A-Za-z0-9]/.test(password)) strength++;
 
 			if (strength <= 1) {
 				feedback = 'Słabe';
@@ -192,6 +200,52 @@
 			return strength >= 3;
 		};
 
+		const passwordInput = document.querySelector('#password');
+			passwordInput.addEventListener('input', () => {
+			checkPasswordStrength(passwordInput.value);
+		});
+
+		form.addEventListener('submit', (e) => {
+			e.preventDefault();
+
+			let isValid = true;
+
+			inputs.forEach(input => {
+				if (!checkRequired(input)) {
+					isValid = false;
+				} else {
+					showSuccess(input);
+				}
+			});
+
+			// email
+			const email = document.querySelector('#email');
+			if (email.value && !checkEmail(email)) {
+				isValid = false;
+			}
+
+			// hasło
+			const password = document.querySelector('#password');
+			if (password.value && !checkPasswordStrength(password.value)) {
+				showError(password, 'Hasło jest za słabe');
+				isValid = false;
+			}
+
+			// potwierdzenie hasła
+			const confirmPassword = document.querySelector('#confirmPassword');
+			if (password.value !== confirmPassword.value) {
+				showError(confirmPassword, 'Hasła nie są takie same');
+				isValid = false;
+			}
+
+			if (isValid) {
+				successMessage.style.display = 'block';
+				form.reset();
+
+				strenghtText.textContent = 'Brak';
+				strenghtText.className = '';
+			}
+	});
 	</script>
 </body>
 </html>
