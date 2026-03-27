@@ -138,3 +138,27 @@ button:disabled {
         transform: translateY(0);
     }
 }
+
+#togglePassword {
+    width: auto;
+    padding: 6px 10px;
+    font-size: 14px;
+    background: transparent;
+    border: none;
+    color: #667eea;
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 38px; /* dopasuj do inputa */
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+#togglePassword:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+#togglePassword:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
