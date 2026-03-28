@@ -1,0 +1,46 @@
+section {
+  padding: 30px;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.row section {
+  flex: 1;
+}
+
+#one {
+  background-color: antiquewhite;
+  color: black;
+}
+
+#two {
+  background-color: aqua;
+  color: black;
+}
+
+#three {
+  background-color: brown;
+}
+
+#four {
+  background-color: black;
+}
+
+#five {
+  background-color: blueviolet;
+}
+
+#six {
+  background-color: rgb(255, 0, 0);
+}
+
+#seven {
+  background-color: rgb(58, 162, 247);
+}

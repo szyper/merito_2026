@@ -1,0 +1,114 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f4f4f4;
+}
+
+/* ===== GŁÓWNA SIATKA STRONY ===== */
+body {
+    display: grid;
+    grid-template-columns: 20% 55% 25%;
+    grid-template-areas:
+        "header header header"
+        "sidebar main ad"
+        "extra extra extra"
+        "footer footer footer";
+    gap: 10px;
+    padding: 10px;
+}
+
+/* ===== WSPÓLNE STYLE ===== */
+header, nav, main, aside, section, footer {
+    color: white;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    font-size: 18px;
+    border-radius: 10px;
+}
+
+/* ===== OBSZARY GRID ===== */
+#header {
+    grid-area: header;
+    background: linear-gradient(90deg, #ffb703, #fb8500);
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+#sidebar {
+    grid-area: sidebar;
+    background-color: #023047;
+}
+
+#main {
+    grid-area: main;
+    background-color: #219ebc;
+    text-align: left;
+}
+
+#ad {
+    grid-area: ad;
+    background-color: #8ecae6;
+}
+
+#extra {
+    grid-area: extra;
+    background-color: #fb8500;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+/* ===== CARDY ===== */
+.card {
+    background-color: #ffb703;
+    border-radius: 10px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+}
+
+/* ===== FOOTER ===== */
+#footer {
+    grid-area: footer;
+    background-color: #333;
+    color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===== MAIN CONTENT (obraz + box) ===== */
+#main {
+    display: grid;
+    grid-template-columns: 40% 1fr;
+    gap: 10px;
+    overflow: hidden;
+}
+
+.img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.info {
+    background: white;
+    color: black;
+    padding: 10px;
+    border-radius: 10px;
+
+    min-width: 0;              /* KLUCZ */
+    overflow-wrap: break-word; /* zawijanie */
+    word-break: break-word;
+}
+
+/* ===== HOVER ===== */
+#sidebar:hover, #main:hover, #ad:hover {
+    filter: brightness(1.1);
+    cursor: pointer;
+}

@@ -1,0 +1,17 @@
+.container {
+ display: grid; 
+ grid-template-columns: 1fr 3fr 2fr;
+ gap: 10px;
+}
+
+.menu {
+  background-color: lightblue;
+}
+
+.content {
+  background-color: lightgreen;
+}
+
+.sidebar {
+  background-color: lightcoral;
+}
