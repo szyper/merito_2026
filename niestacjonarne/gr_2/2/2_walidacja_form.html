@@ -14,7 +14,7 @@
 			<!-- Imię i nazwisko -->
 			 <div class="form-group">
 				<label for="firstName">Imię</label>
-				<input type="text" name="firstName" id="firstName" required minlength="2" maxlength="30">
+				<input type="text" name="firstName" id="firstName" required minlength="2" maxlength="10">
 				<div class="error-message">Imię musi mieć co najmniej 2 znaki</div>
 			 </div>
 
@@ -34,7 +34,7 @@
 				<!-- Hasło -->
 				<div class="form-group">
 					<label for="password">Hasło</label>
-					<input type="password" name="password" id="password" required minlength="8">
+					<input type="password" name="password" id="password" required minlength="8" maxlength="40">
 					<div class="error-message">Hasło musi mieć min. 8 znaków, zawierać duża literę, cyfrę i znak specjalny</div>
 					<div class="password-strength">Siła hasła: <span id="strengthText">Brak</span></div>
 				</div>
@@ -49,7 +49,7 @@
 				<!-- Wiek -->
 				<div class="form-group">
 					<label for="age">Wiek</label>
-					<input type="number" name="age" id="age" min="13" max="120" required>
+					<input type="number" name="age" id="age" min="13" max="140" required>
 					<div class="error-message">Musisz mieć co najmniej 13 lat</div>
 				</div>
 
@@ -81,8 +81,8 @@
 				  <div class="form-group checkbox-group">
 					<input type="checkbox" name="terms" id="terms" required>
 					<label for="terms">Akceptuję <a href="#" style="color: #667eea">Regulamin serwisu</a> i <a href="#" style="color: #667eea">politykę prywatności</a></label>
-				  </div>
 				  <div class="error-message">Musisz zaakceptować regulamin</div>
+				</div>
 
 				  <!-- Newsletter -->
 				   <div class="form-group checkbox-group">
@@ -114,6 +114,7 @@
       input.classList.remove('success');
       const errorEl = formGroup.querySelector('.error-message');
       if (errorEl) {
+			errorEl.textContent = message;
         errorEl.classList.add('show');
       }
     };
@@ -124,20 +125,29 @@
       input.classList.remove('error');
       const errorEl = formGroup.querySelector('.error-message');
       if (errorEl) {
+				errorEl.textContent = '';
         errorEl.classList.remove('show');
       }
     };
 
     const checkRequired = (input) => {
-      if (input.value.trim() === '') {
-        showError(
-          input,
-        input.name === 'terms' ? 'Musisz zaakceptować regulamin!' : input.type === 'email' ? 'Email jest wymagany' : `${input.previousElementSibling.textContent} jest wymagane`);
-
-        return false;
-      }
-
-      return true;
+      if (input.type === 'checkbox') {
+				if (input.id === 'terms') {
+					if (!input.checked) {
+						showError(input, 'Musisz zaakceptować regulamin!');
+						return false;
+					} else {
+						showSuccess(input);
+						return true;
+					}
+				}
+				return true;
+			}
+			if (input.value.trim() === '') {
+				showError(input, `${input.previousElementSibling.textContent} jest wymagane`);
+				return false;
+			}
+			return true;
     };
 
     const checkLength = (input, min, max) => {
@@ -169,7 +179,115 @@
       return true;
     };
 
-    // dokończyć weryfikację hasła
+		const checkAge = (input) => {
+			// dokończyć walidację wieku
+		};
+
+    const checkPasswordStrength = (password) => {
+			let strength = 0;
+			let feedback = '';
+			
+			if (password.length >= 8) strength++;
+			if (/[A-Z]/.test(password)) strength++;
+			if (/[0-9]/.test(password)) strength++;
+
+			//znaki specjalne
+			if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+			if (strength <= 1){
+				feedback = 'Słabe';
+				strengthText.className = 'strength-weak';
+			} else if (strength <= 2) {
+				feedback = 'Średnie';
+				strengthText.className = 'strength-medium';
+			} else {
+				feedback = 'Mocne';
+				strengthText.className = 'strength-strong';
+			}
+
+			strengthText.textContent = feedback;
+
+			return strength >= 2; 
+		};
+
+		const passwordInput = document.querySelector('#password');
+
+		passwordInput.addEventListener('input', () => {
+			checkPasswordStrength(passwordInput.value);
+		});
+
+		form.addEventListener('submit', (e) => {
+			e.preventDefault();
+
+			let isValid = true;
+
+			inputs.forEach(input => {
+				if (!checkRequired(input)) {
+					isValid = false;
+				} else {
+					showSuccess(input);
+				}
+			});
+
+			const email = document.querySelector('#email');
+			if (email.value && !checkEmail(email)) {
+				isValid = false;
+			}
+
+			const password = document.querySelector('#password');
+			if (password.value && !checkPasswordStrength(password.value)) {
+				showError(password, 'Hasło jest za słabe!');
+				isValid = false;
+			}
+
+			const confirmPassword = document.querySelector('#confirmPassword');
+			if (password.value !== confirmPassword.value) {
+				showError(confirmPassword, 'Hasła nie są takie same!');
+				isValid = false;
+			}
+
+			if (isValid) {
+				successMessage.style.display = 'block';
+				form.reset();
+
+				strengthText.textContent = 'Brak';
+				strengthText.className = '';
+			}
+		});
+
+		inputs.forEach(input => {
+			input.addEventListener('input', () => validateField(input));
+			input.addEventListener('change', () => validateField(input));
+		});
+
+		const validateField = (input) => {
+			let isValid = true;
+
+			if (!checkRequired(input)) isValid = false;
+
+			if (isValid && input.minLength > 0) {
+				if (!checkLength(input, input.minLength, input.maxLength)) {
+					isValid = false;
+				}
+			}
+
+			if (input.id === 'password') {
+				checkPasswordStrength(input.value);
+			}
+
+			if (input.id === 'confirmPassword' ) {
+				const password = document.querySelector('#password');
+
+				if (input.value !== password.value) {
+					showError(input, 'Hasła są różne!');
+					isValid = false;
+				}
+			}
+
+			if (isValid) {
+				showSuccess(input);
+			}
+		};
   </script>
 </body>
 </html>

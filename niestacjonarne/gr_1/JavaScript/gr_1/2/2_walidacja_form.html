@@ -34,7 +34,7 @@
 				<!-- Hasło -->
 				<div class="form-group">
 					<label for="password">Hasło</label>
-					<input type="password" name="password" id="password" required minlength="8">
+					<input type="password" name="password" id="password" required minlength="8" maxlength="30">
 					<div class="error-message">Hasło musi mieć min. 8 znaków, zawierać duża literę, cyfrę i znak specjalny</div>
 					<div class="password-strength">Siła hasła: <span id="strengthText">Brak</span></div>
 				</div>
@@ -99,7 +99,7 @@
 	</div>
  <script>
 	const form = document.querySelector("#registerForm");
-	const inputs = document.querySelectorAll('input', 'select');
+	const inputs = document.querySelectorAll('input, select');
 	const submitBtn = document.querySelector('#submitBtn');
 	const successMessage = document.querySelector('#successMessage');
 	const strengthText = document.querySelector('#strengthText');
@@ -125,11 +125,14 @@
 		input.classList.add('success');
 		const errorEl = formGroup.querySelector('.error-message');
 		if (errorEl) {
-			errorEl.textContent = message;
+			errorEl.textContent = '';
 			errorEl.classList.remove('show');
 		}
 	};
 
+	//toggle
+
+	// sprawdzenie
 	const checkRequired = (input) => {
 		if (input.value.trim() === '') {
 			showError(
@@ -159,7 +162,7 @@
 
 	// walidacja email test()
 	const checkEmail = (input) => {
-		const re = /^[a-zA-Z0-9._%+-]@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+		const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 		if (!re.test(input.value.trim())) {
 			showError(input, 'Podaj poprawny adres email');
@@ -168,7 +171,144 @@
 		return true;
 	};
 
+	// walidacja wieku
+	const checkAge = (input) => {
+		const value = parseInt(input.value);
+
+		if (isNaN(value)) {
+			showError(input, 'Podaj poprawny wiek');
+			return false;
+		}
+
+		if (value < 13) {
+			showError(input, 'Musisz mieć co najmniej 13 lat');
+			return false;
+		}
+
+		if (value > 140) {
+			showError(input, 'Podaj realistyczny wiek');
+			return false;
+		}
+	};
+
+	// dodać do submita
+	// dodać do validateField
+
 	// dokończyć siłę hasła
+	const checkPasswordStrength = (password) => {
+		let strength = 0;
+		let feedback = '';
+
+		if (password.length >= 8) strength++;
+
+		if (/[A-Z]/.test(password)) strength++;
+		if (/[0-9]/.test(password)) strength++;
+
+		if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+		if (strength <= 1) {
+			feedback = 'Słabe';
+			strengthText.className = 'strength-weak';
+		} else if (strength <= 2) {
+			feedback = 'Średnie';
+			strengthText.className = 'strength-medium';
+		} else {
+			feedback = 'Mocne';
+			strengthText.className = 'strength-strong';
+		}
+
+		strengthText.textContent = feedback;
+
+		return strength >= 2;
+	};
+
+	
+
+
+	const passwordInput = document.querySelector('#password');
+	passwordInput.addEventListener('input', () => {
+		checkPasswordStrength(passwordInput.value);
+	});
+
+	// submit formularza
+	form.addEventListener('submit', (e) => {
+		e.preventDefault();
+		let isValid = true;
+		inputs.forEach(input => {
+			if (!checkRequired(input)) {
+				isValid = false;
+			} else {
+				showSuccess(input);
+			}
+		});
+
+		const email = document.querySelector('#email');
+		if (email.value && !checkEmail(email)) {
+			isValid = false;
+		}
+
+		const password = document.querySelector('#password');
+		if (password.value && !checkPasswordStrength(password.value)) {
+			showError(password, 'Hasło jest za słabe!');
+			isValid = false;
+		}
+
+		const confirmPassword = document.querySelector('#confirmPassword');
+		if (password.value !== confirmPassword.value) {
+			showError(confirmPassword, 'Hasła nie są takie same!');
+			isValid = false;
+		} else {
+			showSuccess(confirmPassword);
+		}
+
+		if (isValid) {
+			successMessage.style.display = 'block';
+			form.reset();
+
+			strengthText.textContent = 'Brak';
+			strengthText.className = '';
+		}
+	});
+
+	inputs.forEach(input => {
+		input.addEventListener('input', () => validateField(input));
+		input.addEventListener('change', () => validateField(input));
+	});
+
+	const validateField = (input) => {
+		let isValid = true;
+
+		if (!checkRequired(input)) isValid = false;
+
+		if (isValid && input.minLength > 0) {
+			if (!checkLength(input, input.minLength, input.maxLength)) {
+				isValid = false;
+			}
+		}
+
+		if (isValid && input.type === 'email') {
+			if (!checkEmail(input)) isValid = false;
+		}
+
+		if (input.id === 'password') {
+			checkPasswordStrength(input.value);
+		}
+
+		if (input.id === 'confirmPassword') {
+			const password = document.querySelector('#password');
+
+			if (input.value !== password.value) {
+				showError(input, 'Hasła są różne!');
+				isValid = false;
+			} else {
+				showSuccess(input);
+			}
+		}
+
+		if (isValid) {
+			showSuccess(input);
+		}
+	};
  </script>
 </body>
 </html>
