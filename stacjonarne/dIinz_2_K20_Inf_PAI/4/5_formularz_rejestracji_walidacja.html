@@ -142,7 +142,7 @@
 		});
 
 		const checkRequired = (input) => {
-			if (input.type === 'checkbox') {
+			if (input.value.trim() === '') {
 				if (!input.checked) {
 					showError(input, 'Musisz zaakceptować regulamin');
 					return false;
