@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formularze + js</title>
+</head>
+<body>
+    <input type="text" id="name" placeholder="Podaj imię" autofocus><br>
+    <div class="checkbox">
+        <input type="checkbox" id="paintCeiling">
+        <label for="paintCeiling">Malować sufit?</label>
+    </div>
+    <button type="submit" onclick="show()">Zatwierdź</button><br><br>
+    Komunikat: <span id="test"></span>
+    <script>
+        function show(){
+            let x = document.getElementById("name").value;
+            let paintCeiling = document.getElementById("paintCeiling").checked; 
+            console.log(x);
+            // document.getElementById('test').innerHTML = x;
+
+            // powierzchnia
+
+            if (paintCeiling) {
+                // powierzchnia + = dlugosc * szerokosc;
+            }
+
+            document.getElementById('test').textContent = x;
+        }
+    </script>
+</body>
+</html>
