@@ -1,0 +1,3 @@
+usuwanie elementów
+- dodaj przy każdym elemencie przycisk
+- kliknięcie ususwa element z Modelu

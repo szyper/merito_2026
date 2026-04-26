@@ -11,17 +11,17 @@
         <h2>Fahrenheit -> Celsjusz</h2>
         <form>
             Podaj temperaturę w °F:<br>
-            <input type="number" oninput="convertTemperature()" id="fahrenheit"><br>
-            <!-- <button type="button" onclick="convertTemperature()">Przelicz</button> -->
+            <input type="range" oninput="convertTemperature()" id="slider" value="32" min="-40" max="212"><br>
         </form>
         <p id="result"></p>
     </div>
     <script>
         function convertTemperature(){
-            let fahrenheitValue = document.getElementById("fahrenheit").value;
+            let fahrenheitValue = document.getElementById("slider").value;
             let calsiusValue = (fahrenheitValue - 32) * 5 / 9;
 
             document.getElementById("result").innerHTML = "Temperatura w °C: " + calsiusValue.toFixed(2);
+            // body > zmiana stylu (backgroundColor)
             
         }
     </script>
