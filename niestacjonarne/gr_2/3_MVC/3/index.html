@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MVC App</title>
+</head>
+<body>
+  <input type="text" id="input" autofocus>
+  <button id="btn">Dodaj</button>
+  <p id="counter">Liczba zadań: 0</p>
+  <ul id="list"></ul>
+
+  <script type="module">
+    import { Controller } from "./controller.js";
+    new Controller();
+  </script>
+</body>
+</html>
